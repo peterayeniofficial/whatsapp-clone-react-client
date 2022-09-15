@@ -1,15 +1,15 @@
 import React from 'react';
 import moment from 'moment';
-
+import { List, ListItem } from '@material-ui/core';
 import { chats } from '../../db';
 
 const ChatsList: React.FC = () => {
   return (
     <div>
       <div>
-        <ul>
+        <List>
           {chats.map((chat) => (
-            <li key={chat.id}>
+            <ListItem key={chat.id}>
               <img src={chat.picture} alt={chat.name} />
               <div>{chat.name}</div>
               {chat.lastMessage && (
@@ -20,9 +20,9 @@ const ChatsList: React.FC = () => {
                   </div>
                 </>
               )}
-            </li>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </div>
     </div>
   );
