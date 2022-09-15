@@ -1,2 +1,18 @@
-export { default as ChatsList } from './ChatsList';
-export { default as ChatsNavBar } from './ChatsNavBar';
+import React from 'react';
+import styled from 'styled-components';
+
+import ChatsList from '../ChatsList';
+import ChatsNavBar from '../ChatsNavBar';
+
+const Container = styled.div`
+  height: 100vh;
+`;
+
+const ChatsListScreen: React.FC = () => (
+  <Container>
+    <ChatsNavBar />
+    <ChatsList />
+  </Container>
+);
+
+export default ChatsListScreen;
