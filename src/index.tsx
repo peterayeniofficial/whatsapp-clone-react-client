@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+import { MuiThemeProvider, createTheme } from '@material-ui/core';
 
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { main: '#2c6157' },
     secondary: { main: '#6fd056' },
