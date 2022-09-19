@@ -1,46 +1,33 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Route,
   Redirect,
   RouteComponentProps,
 } from 'react-router-dom';
-import { History } from 'history';
-
-import ChatsListScreen from './components/ChatsListScreen';
 import ChatRoomScreen from './components/ChatRoomScreen';
+import ChatsListScreen from './components/ChatsListScreen';
 import AnimatedSwitch from './components/AnimatedSwitch';
 
-const App: React.FC = () => {
-  return (
-    <Router>
-      <AnimatedSwitch>
-        <Route
-          exact
-          path="/chats"
-          component={({
-            match,
-            history,
-          }: RouteComponentProps<{ chatId: string; history: History }>) => (
-            <ChatsListScreen chatId={match.params.chatId} history={history} />
-          )}
-        />
+const App: React.FC = () => (
+  <BrowserRouter>
+    <AnimatedSwitch>
+      <Route exact path="/chats" component={ChatsListScreen} />
 
-        <Route
-          exact
-          path="/chats/:chatId"
-          component={({
-            match,
-            history,
-          }: RouteComponentProps<{ chatId: string }>) => (
-            <ChatRoomScreen chatId={match.params.chatId} history={history} />
-          )}
-        />
-      </AnimatedSwitch>
-      <Route exact path="/" render={redirectToChats} />
-    </Router>
-  );
-};
+      <Route
+        exact
+        path="/chats/:chatId"
+        component={({
+          match,
+          history,
+        }: RouteComponentProps<{ chatId: string }>) => (
+          <ChatRoomScreen chatId={match.params.chatId} history={history} />
+        )}
+      />
+    </AnimatedSwitch>
+    <Route exact path="/" render={redirectToChats} />
+  </BrowserRouter>
+);
 
 const redirectToChats = () => <Redirect to="/chats" />;
 

@@ -5,8 +5,7 @@ import React from 'react';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 import { History } from 'history';
-
-import { ChatQueryResult } from '../components/ChatRoomScreen';
+import { ChatQueryResult } from './index';
 
 const Container = styled(Toolbar)`
   padding: 0;
@@ -48,10 +47,10 @@ const ChatNavbar: React.FC<ChatNavbarProps> = ({ chat, history }) => {
 
   return (
     <Container>
-      <BackButton onClick={navBack} data-testid="back-button">
+      <BackButton data-testid="back-button" onClick={navBack}>
         <ArrowBackIcon />
       </BackButton>
-      <Picture src={chat.picture} data-testid="chat-picture" />
+      <Picture data-testid="chat-picture" src={chat.picture} />
       <Name data-testid="chat-name">{chat.name}</Name>
     </Container>
   );

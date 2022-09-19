@@ -1,23 +1,20 @@
 import React from 'react';
+import ChatsNavbar from './ChatsNavbar';
+import ChatsList from './ChatsList';
 import styled from 'styled-components';
 import { History } from 'history';
-
-import ChatsList from '../ChatsList';
-import ChatsNavBar from '../ChatsNavBar';
-import { ChatQueryResult } from '../ChatRoomScreen';
 
 const Container = styled.div`
   height: 100vh;
 `;
 
-interface ChatListScreenProps {
+interface ChatsListScreenProps {
   history: History;
-  chat: ChatQueryResult;
 }
 
-const ChatsListScreen: React.FC<ChatListScreenProps> = ({ history, chat }) => (
+const ChatsListScreen: React.FC<ChatsListScreenProps> = ({ history }) => (
   <Container>
-    <ChatsNavBar history={history} chat={chat} />
+    <ChatsNavbar />
     <ChatsList history={history} />
   </Container>
 );

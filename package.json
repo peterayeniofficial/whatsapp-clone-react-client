@@ -54,6 +54,10 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-router-transition)/)"
+    ]},
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",

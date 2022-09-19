@@ -58,7 +58,7 @@ const MessageDate = styled.div`
   font-size: 13px;
 `;
 
-const getChatsQuery = gql`
+export const getChatsQuery = gql`
   query Chats {
     chats {
       id
@@ -96,7 +96,7 @@ const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
   return (
     <Container>
       <StyledList>
-        {chats.map((chat) => (
+        {chats.map((chat: any) => (
           <StyledListItem
             key={chat.id}
             button

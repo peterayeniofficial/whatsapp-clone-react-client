@@ -1,11 +1,10 @@
 import React from 'react';
-import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { History } from 'history';
 import { useApolloClient, useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import ChatNavbar from '../ChatsNavBar';
+import ChatNavbar from './ChatNavBar';
 import MessageInput from './MessageInput';
 import MessagesList from './MessagesList';
 
