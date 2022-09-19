@@ -1,17 +1,33 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect, switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch,
+  RouteComponentProps,
+} from 'react-router-dom';
 import ChatsListScreen from './components/ChatsListScreen';
 import ChatRoomScreen from './components/ChatRoomScreen';
 
-const App: React.FC = () => (
-  <BrowserRouter>
-    <switch>
-      <Route exact path="/chats" component={ChatsListScreen} />
-      <Route exact path='/chats/:chatId' component={ChatRoomScreen}/>
-    </switch>
-    <Route exact path="/" render={redirectToChats} />
-  </BrowserRouter>
-);
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/chats">
+          <ChatsListScreen />
+        </Route>
+        <Route
+          exact
+          path="/chats/:chatId"
+          component={({ match }: RouteComponentProps<{ chatId: string }>) => (
+            <ChatRoomScreen chatId={match.params.chatId} />
+          )}
+        />
+      </Switch>
+      <Route exact path="/" render={redirectToChats} />
+    </Router>
+  );
+};
 
 const redirectToChats = () => <Redirect to="/chats" />;
 
