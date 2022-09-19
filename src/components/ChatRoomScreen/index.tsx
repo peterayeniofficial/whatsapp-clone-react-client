@@ -2,6 +2,8 @@ import React from 'react';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { History } from 'history';
+import { useApolloClient, useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 
 import ChatNavbar from '../ChatsNavBar';
 import MessageInput from './MessageInput';
@@ -14,7 +16,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const getChatQuery = `
+const getChatQuery = gql`
   query GetChat($chatId: ID!) {
     chat(chatId: $chatId) {
       id
@@ -47,30 +49,15 @@ export interface ChatQueryResult {
   messages: Array<ChatQueryMessage>;
 }
 
-type OptionalChatQueryResult = ChatQueryResult | null;
-
 const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
   chatId,
   history,
 }) => {
-  const [chat, setChat] = useState<OptionalChatQueryResult>(null);
-
-  useMemo(async () => {
-    const body = await fetch(`${process.env.REACT_APP_URL}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: getChatQuery,
-        variables: { chatId },
-      }),
-    });
-    const {
-      data: { chat },
-    } = await body.json();
-    setChat(chat);
-  }, [chatId]);
+  const client = useApolloClient();
+  const { data } = useQuery<any>(getChatQuery, {
+    variables: { chatId },
+  });
+  const chat = data?.chat;
 
   const onSendMessage = React.useCallback(
     (content: string) => {
@@ -80,14 +67,21 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
         id: (chat.messages.length + 10).toString(),
         createdAt: new Date(),
         content,
+        __typename: 'Chat',
       };
 
-      setChat({
-        ...chat,
-        messages: chat.messages.concat(message),
+      client.writeQuery({
+        query: getChatQuery,
+        variables: { chatId },
+        data: {
+          chat: {
+            ...chat,
+            messages: chat.messages.concat(message),
+          },
+        },
       });
     },
-    [chat]
+    [chat, chatId, client]
   );
 
   if (!chat) return <p>No Chat</p>;

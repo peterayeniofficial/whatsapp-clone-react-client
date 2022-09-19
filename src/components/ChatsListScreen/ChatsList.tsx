@@ -3,6 +3,8 @@ import moment from 'moment';
 import styled from 'styled-components';
 import { History } from 'history';
 import { List, ListItem } from '@material-ui/core';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 const Container = styled.div`
   height: calc(100% - 56px);
@@ -56,19 +58,19 @@ const MessageDate = styled.div`
   font-size: 13px;
 `;
 
-const getChatsQuery = `
-query Chats {
-  chats {
-    id
-    name
-    picture
-     lastMessage {
-       content
-       id
-       createdAt
-     }
+const getChatsQuery = gql`
+  query Chats {
+    chats {
+      id
+      name
+      picture
+      lastMessage {
+        content
+        id
+        createdAt
+      }
+    }
   }
-}
 `;
 
 interface ChatsListProps {
@@ -76,21 +78,7 @@ interface ChatsListProps {
 }
 
 const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
-  const [chats, setChats] = React.useState<any[]>([]);
-
-  React.useMemo(async () => {
-    const body = await fetch(`${process.env.REACT_APP_URL}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: getChatsQuery }),
-    });
-    const {
-      data: { chats },
-    } = await body.json();
-    setChats(chats);
-  }, []);
+  const { data } = useQuery<any>(getChatsQuery);
 
   const navTochat = React.useCallback(
     (chat: any) => {
@@ -98,6 +86,12 @@ const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
     },
     [history]
   );
+
+  if (data === undefined || data.chats === undefined) {
+    return null;
+  }
+
+  let chats = data.chats;
 
   return (
     <Container>
