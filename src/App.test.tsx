@@ -3,6 +3,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { render, waitFor, screen } from '@testing-library/react';
 import ChatsList from './components/ChatsList';
+import { createBrowserHistory } from 'history';
 
 const server = setupServer(
   rest.post('localhost:4000/graphql', (req, res, ctx) => {
@@ -33,7 +34,8 @@ afterAll(() => server.close());
 
 describe('ChatList', () => {
   test('renders fetched chats data', async () => {
-    render(<ChatsList />);
+    const history = createBrowserHistory();
+    render(<ChatsList history={history} />);
 
     await waitFor(() => screen.findByTestId('name'));
     expect(screen.getByTestId('name')).toHaveTextContent('Foo Bar');
