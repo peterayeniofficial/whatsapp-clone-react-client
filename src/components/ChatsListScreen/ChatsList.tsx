@@ -1,11 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import { History } from 'history';
 import { List, ListItem } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import {useParams, Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 const Container = styled.div`
   height: calc(100% - 56px);

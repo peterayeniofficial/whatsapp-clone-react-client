@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/prefer-screen-queries */
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { cleanup, render, waitFor, fireEvent } from '@testing-library/react';
