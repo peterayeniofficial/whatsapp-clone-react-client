@@ -1,16 +1,14 @@
-import { ApolloProvider } from '@apollo/react-hooks';
 import ReactDOM from 'react-dom';
+import { MockedProvider } from "@apollo/client/testing";
 import App from './App';
-import { mockApolloClient } from './test-helpers';
 
 it('renders without crashing', () => {
-  const client = mockApolloClient();
   const div = document.createElement('div');
 
   ReactDOM.render(
-    <ApolloProvider client={client}>
+    <MockedProvider >
       <App />
-    </ApolloProvider>,
+    </MockedProvider>,
     div
   );
   ReactDOM.unmountComponentAtNode(div);

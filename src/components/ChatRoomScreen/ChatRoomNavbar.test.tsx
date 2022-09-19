@@ -1,7 +1,7 @@
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { cleanup, render, waitFor, fireEvent } from '@testing-library/react';
-import ChatNavbar from './ChatNavbar';
+import ChatRoomNavbar from './ChatRoomNavbar';
 
 describe('ChatNavbar', () => {
   afterEach(cleanup);
@@ -30,7 +30,7 @@ describe('ChatNavbar', () => {
 
     {
       const { container, getByTestId } = render(
-        <ChatNavbar chat={chat} history={history} />
+        <ChatRoomNavbar chat={chat}  />
       );
 
       expect(getByTestId('chat-name')).toHaveTextContent('Foo Bar');
@@ -69,7 +69,7 @@ describe('ChatNavbar', () => {
 
     {
       const { container, getByTestId } = render(
-        <ChatNavbar chat={chat} history={history} />
+        <ChatRoomNavbar chat={chat}  />
       );
 
       fireEvent.click(getByTestId('back-button'));

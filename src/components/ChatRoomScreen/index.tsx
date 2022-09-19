@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { History } from 'history';
 import { useApolloClient, useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import ChatNavbar from './ChatNavBar';
 import MessageInput from './MessageInput';
 import MessagesList from './MessagesList';
+import { useParams } from 'react-router-dom';
+import ChatRoomNavbar from './ChatRoomNavbar';
 
 const Container = styled.div`
   background: url(/assets/chat-background.jpg);
@@ -30,10 +30,6 @@ const getChatQuery = gql`
   }
 `;
 
-interface ChatRoomScreenParams {
-  chatId: string;
-  history: History;
-}
 
 export interface ChatQueryMessage {
   id: string;
@@ -48,11 +44,9 @@ export interface ChatQueryResult {
   messages: Array<ChatQueryMessage>;
 }
 
-const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
-  chatId,
-  history,
-}) => {
+const ChatRoomScreen: React.FC = () => {
   const client = useApolloClient();
+  let { chatId } = useParams<{chatId: string}>();
   const { data } = useQuery<any>(getChatQuery, {
     variables: { chatId },
   });
@@ -87,7 +81,7 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
 
   return (
     <Container>
-      <ChatNavbar chat={chat} history={history} />
+      <ChatRoomNavbar chat={chat}/>
       {chat.messages && <MessagesList messages={chat.messages} />}
       <MessageInput onSendMessage={onSendMessage} />
     </Container>

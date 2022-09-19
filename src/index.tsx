@@ -6,7 +6,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import client from './client';
+import {client} from './client';
 
 const theme = createTheme({
   palette: {

@@ -5,6 +5,7 @@ import { History } from 'history';
 import { List, ListItem } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import {useParams, Link, useHistory} from "react-router-dom";
 
 const Container = styled.div`
   height: calc(100% - 56px);
@@ -73,19 +74,24 @@ export const getChatsQuery = gql`
   }
 `;
 
-interface ChatsListProps {
-  history: History;
-}
 
-const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
+
+const ChatsList: React.FC = () => {
   const { data } = useQuery<any>(getChatsQuery);
+  // const {chatId} = useParams()
 
-  const navTochat = React.useCallback(
-    (chat: any) => {
-      history.push(`chats/${chat.id}`);
-    },
-    [history]
-  );
+  // const navTochat = React.useCallback(
+  //   (chat: any) => {
+  //     history.push(`chats/${chat.id}`);
+  //   },
+  //   [history]
+  // );
+
+  let history = useHistory();
+
+  function handleClick(chat: any) {
+    history.push(`/chats/${chat.id}`);
+  }
 
   if (data === undefined || data.chats === undefined) {
     return null;
@@ -97,11 +103,12 @@ const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
     <Container>
       <StyledList>
         {chats.map((chat: any) => (
+          
           <StyledListItem
             key={chat.id}
             button
             data-testid="chat"
-            onClick={navTochat.bind(null, chat)}
+           onClick={() => handleClick(chat)}
           >
             <ChatPicture
               src={chat.picture}
@@ -122,6 +129,7 @@ const ChatsList: React.FC<ChatsListProps> = ({ history }) => {
               )}
             </ChatInfo>
           </StyledListItem>
+         
         ))}
       </StyledList>
     </Container>
