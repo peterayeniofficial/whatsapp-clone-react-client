@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/prefer-screen-queries */
 /* eslint-disable no-global-assign */
 import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -13,6 +14,7 @@ import { MockedProvider } from "@apollo/client/testing";
 
 import { createBrowserHistory } from 'history';
 import ChatsList, { getChatsQuery } from './ChatsList';
+import * as queries from '../../graphql/queries';
 
 describe('ChatsList', () => {
   afterEach(() => {
@@ -29,7 +31,7 @@ describe('ChatsList', () => {
 
   const mocks = [
     {
-      request: { query: getChatsQuery },
+      request: { query: queries.chats },
       result: {
         data: {
           chats: [
@@ -63,7 +65,7 @@ describe('ChatsList', () => {
         </MockedProvider>
       );
 
-      await waitFor(() => screen.getByTestId('name'));
+      await screen.findByTestId('name');
 
       expect(getByTestId('name')).toHaveTextContent('Foo Bar');
       expect(getByTestId('picture')).toHaveAttribute(
@@ -87,7 +89,7 @@ describe('ChatsList', () => {
         </MockedProvider>
       );
 
-      await waitFor(() => screen.getByTestId('chat'));
+      await screen.findByTestId('chat');
 
       fireEvent.click(getByTestId('chat'));
 

@@ -6,6 +6,8 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import {useHistory} from "react-router-dom";
 
+import * as queries from '../../graphql/queries';
+
 const Container = styled.div`
   height: calc(100% - 56px);
   overflow-y: overlay;
@@ -76,7 +78,7 @@ export const getChatsQuery = gql`
 
 
 const ChatsList: React.FC = () => {
-  const { data } = useQuery<any>(getChatsQuery);
+  const { data } = useQuery<any>(queries.chats);
   // const {chatId} = useParams()
 
   // const navTochat = React.useCallback(
