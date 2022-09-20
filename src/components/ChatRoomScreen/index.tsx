@@ -2,12 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import {  useApolloClient, useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import { defaultDataIdFromObject } from 'apollo-cache-inmemory';
 
 import MessageInput from './MessageInput';
 import MessagesList from './MessagesList';
 import { useParams } from 'react-router-dom';
 import ChatRoomNavbar from './ChatRoomNavbar';
 import * as queries from '../../graphql/queries'
+import * as fragments from '../../graphql/fragments';
 
 const Container = styled.div`
   background: url(/assets/chat-background.jpg);
@@ -19,26 +21,19 @@ const Container = styled.div`
 const getChatQuery = gql`
   query GetChat($chatId: ID!) {
     chat(chatId: $chatId) {
-      id
-      name
-      picture
-      messages {
-        id
-        content
-        createdAt
-      }
+      ...FullChat
     }
   }
+  ${fragments.fullChat}
 `;
 
 const addMessageMutation = gql`
   mutation AddMessage($chat: ID!, $content: String!){
     addMessage(chatId: $chatId, content: $content){
-      id
-      content
-      createdAt
+      ...Message
     }
   }
+  ${fragments.message}
 `
 
 
@@ -102,15 +97,43 @@ const ChatRoomScreen: React.FC = () => {
         },
         update: (client, {data}) => {
           if(data && data.addMessage){
-            client.writeQuery({
-              query: getChatQuery,
-              variables: {chatId},
-              data: {
-                chat: {
-                  ...chat,
-                  messages: chat.messages.concat(data.addMessage)
-                }
-              }
+            type FullChat = { [key: string]: any };
+            let fullChat;
+            const chatIdFromStore = defaultDataIdFromObject(chat);
+
+            if (chatIdFromStore === null) {
+              return;
+            }
+
+            try {
+              fullChat = client.readFragment<FullChat>({
+                id: chatIdFromStore,
+                fragment: fragments.fullChat,
+                fragmentName: 'FullChat',
+              });
+            } catch (e) {
+              return;
+            }
+
+            if (fullChat === null || 
+                fullChat.messages === null ||
+                data === null ||
+                data.addMessage === null ||
+                data.addMessage.id === null) {
+              return;
+            }
+            if (fullChat.messages.some((currentMessage: any) => currentMessage.id === data.addMessage.id)){
+              return;
+            }
+
+            fullChat.messages.push(data.addMessage);
+            fullChat.lastMessage = data.addMessage;
+
+            client.writeFragment({
+              id: chatIdFromStore,
+              fragment: fragments.fullChat,
+              fragmentName: 'FullChat',
+              data: fullChat,
             })
           }
           let clientChatsData
